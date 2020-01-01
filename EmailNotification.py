@@ -1,4 +1,3 @@
-import os
 import gmail
 import argparse
 import datetime
@@ -38,7 +37,4 @@ if __name__ == "__main__":
                             to=recipient,\
                             text=results)
         mail_server.send(msg)
-
-    #clean up file
-    os.remove(log_file_name)
         
