@@ -34,7 +34,7 @@ if __name__ == "__main__":
     upload       = results['upload']
     download     = results['download']
     time         = datetime.datetime.now()
-    time_stamp   = "{}:{}, {}/{}/{} ".format(time.hour, time.minute, time.day, time.month, time.year)
+    time_stamp   = "{}:{}".format(time.hour, time.minute)
     result_final = "[{}] | Upload: {} Mbits/s, Download: {} Mbits/s\n".format(time_stamp, round(upload*10e-6, 3), round(download*10e-6, 3))
 
     print(result_final)

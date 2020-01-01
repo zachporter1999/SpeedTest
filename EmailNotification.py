@@ -1,6 +1,9 @@
 import gmail
 import argparse
 import datetime
+from matplotlib import pyplot as plt
+
+PLOT_FILE_NAME    = "SpeedTest_Plot.png" 
 
 if __name__ == "__main__":
 
@@ -23,6 +26,9 @@ if __name__ == "__main__":
     mail_server = gmail.GMail(server_email, server_password)
 
     time = datetime.datetime.now()
+    time_points = list()
+    upload_points = list()
+    download_points = list()
     results = str()
 
     #read results
@@ -30,11 +36,34 @@ if __name__ == "__main__":
     with open(log_file_name, 'r') as file:
         results = file.read()
 
+    for line in results.split('\n'):
+        if len(line) > 0:
+            words = line.split(' ')
+            test_time = words[0].strip('[,')
+            upload    = words[5]
+            download  = words[8]
+
+            test_time = test_time.split(":")
+            hrs, mins = test_time
+
+            test_time = int(hrs) + int(mins)/60
+
+            time_points.append(test_time)
+            upload_points.append(float(upload))
+            download_points.append(float(download))
+
+    plt.plot(time_points, upload_points, color='blue', label="Upload")
+    plt.plot(time_points, download_points, color='orange', label="Download")
+    plt.ylabel("Speed(Mbits/s)")
+    plt.xlabel("Time(Hours)")
+    plt.title("Upload and Download Speed Summary")
+    plt.legend(loc="upper left")
+    plt.savefig(PLOT_FILE_NAME)
+
     #send results
     for recipient in recipient_list:
         print("Sending results to {}...".format(recipient))
         msg = gmail.Message('Speed Test [{}:{}, {}/{}/{}]'.format(time.hour, time.minute, time.day, time.month, time.year),\
                             to=recipient,\
-                            text=results)
+                            attachments=[PLOT_FILE_NAME, log_file_name])
         mail_server.send(msg)
-        
