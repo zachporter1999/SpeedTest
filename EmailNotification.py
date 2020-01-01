@@ -39,7 +39,7 @@ if __name__ == "__main__":
     for line in results.split('\n'):
         if len(line) > 0:
             words = line.split(' ')
-            test_time = words[0].strip('[,')
+            test_time = words[0].strip('[]')
             upload    = words[3]
             download  = words[6]
 
