@@ -40,8 +40,8 @@ if __name__ == "__main__":
         if len(line) > 0:
             words = line.split(' ')
             test_time = words[0].strip('[,')
-            upload    = words[5]
-            download  = words[8]
+            upload    = words[3]
+            download  = words[6]
 
             test_time = test_time.split(":")
             hrs, mins = test_time
