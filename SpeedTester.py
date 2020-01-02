@@ -1,6 +1,6 @@
 import speedtest
 import argparse
-import datetime
+import time
 
 if __name__ == "__main__":
 
@@ -33,8 +33,7 @@ if __name__ == "__main__":
     results      = test.results.dict()
     upload       = results['upload']
     download     = results['download']
-    time         = datetime.datetime.now()
-    time_stamp   = "{}:{}".format(time.hour, time.minute)
+    time_stamp   = int(time.time())
     result_final = "[{}] | Upload: {} Mbits/s, Download: {} Mbits/s\n".format(time_stamp, round(upload*10e-6, 3), round(download*10e-6, 3))
 
     print(result_final)
