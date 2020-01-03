@@ -43,11 +43,6 @@ if __name__ == "__main__":
             upload    = words[3]
             download  = words[6]
 
-            test_time = test_time.split(":")
-            hrs, mins = test_time
-
-            test_time = int(hrs) + int(mins)/60
-
             time_points.append(test_time)
             upload_points.append(float(upload))
             download_points.append(float(download))
