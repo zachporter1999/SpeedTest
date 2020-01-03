@@ -32,7 +32,7 @@ if __name__ == "__main__":
     results = str()
 
     # midnight time in unix time
-    midnight = datetime.datetime(time.year, time.month, time.day).timestamp
+    midnight = datetime.datetime(time.year, time.month, time.day).timestamp()
 
     #read results
     print("Reading Results...")
@@ -46,7 +46,7 @@ if __name__ == "__main__":
             upload    = words[3]
             download  = words[6]
 
-            time_points.append((test_time - midnight)//3600)
+            time_points.append((float(test_time) - midnight)//3600)
             upload_points.append(float(upload))
             download_points.append(float(download))
 
