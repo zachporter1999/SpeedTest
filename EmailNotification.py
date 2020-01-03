@@ -31,6 +31,9 @@ if __name__ == "__main__":
     download_points = list()
     results = str()
 
+    # midnight time in unix time
+    midnight = datetime.datetime(time.year, time.month, time.day).timestamp
+
     #read results
     print("Reading Results...")
     with open(log_file_name, 'r') as file:
@@ -43,7 +46,7 @@ if __name__ == "__main__":
             upload    = words[3]
             download  = words[6]
 
-            time_points.append(test_time)
+            time_points.append((test_time - midnight)//3600)
             upload_points.append(float(upload))
             download_points.append(float(download))
 
