@@ -2,8 +2,7 @@ import speedtest
 import argparse
 import time
 
-if __name__ == "__main__":
-
+def testSpeed():
     print("Initializing...")
 
     parser = argparse.ArgumentParser()
@@ -42,3 +41,6 @@ if __name__ == "__main__":
         file.write(result_final)
 
     print("Test Finished")
+
+if __name__ == "__main__":
+    testSpeed()

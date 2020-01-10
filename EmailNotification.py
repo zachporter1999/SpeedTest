@@ -3,9 +3,8 @@ import argparse
 import datetime
 from matplotlib import pyplot as plt
 
-PLOT_FILE_NAME    = "SpeedTest_Plot.png" 
-
-if __name__ == "__main__":
+def sendNotification():
+    plot_file_name = "SpeedTest_Plot.png" 
 
     #parse args
     parser = argparse.ArgumentParser()
@@ -56,12 +55,15 @@ if __name__ == "__main__":
     plt.xlabel("Time(Hours)")
     plt.title("Upload and Download Speed Summary")
     plt.legend(loc="upper left")
-    plt.savefig(PLOT_FILE_NAME)
+    plt.savefig(plot_file_name)
 
     #send results
     for recipient in recipient_list:
         print("Sending results to {}...".format(recipient))
         msg = gmail.Message('Speed Test [{}:{}, {}/{}/{}]'.format(time.hour, time.minute, time.day, time.month, time.year),\
                             to=recipient,\
-                            attachments=[PLOT_FILE_NAME, log_file_name])
+                            attachments=[plot_file_name, log_file_name])
         mail_server.send(msg)
+
+if __name__ == "__main__":
+    sendNotification()
