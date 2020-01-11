@@ -3,22 +3,9 @@ import argparse
 import datetime
 from matplotlib import pyplot as plt
 
-def sendNotification():
+def sendNotification(server_email, server_password, recipient_list, log_file_name):
     plot_file_name = "SpeedTest_Plot.png" 
 
-    #parse args
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-Server',   type=str,  required=True,  help="The email to send the results from")
-    parser.add_argument('-Password', type=str, required=True,  help="The password for the server")
-    parser.add_argument('-Receiver', type=str, required=True,  help="The addresses to send results to", nargs='+')
-    parser.add_argument('-Log',      type=str, required=True,  help="The file name to read the results from")
-    
-    args = parser.parse_args()
-
-    server_email    = args.Server
-    server_password = args.Password
-    recipient_list  = args.Receiver
-    log_file_name   = args.Log
 
     #log into email
     print("Logging into {}...".format(server_email))
@@ -66,4 +53,18 @@ def sendNotification():
         mail_server.send(msg)
 
 if __name__ == "__main__":
-    sendNotification()
+    #parse args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-Server',   type=str,  required=True,  help="The email to send the results from")
+    parser.add_argument('-Password', type=str, required=True,  help="The password for the server")
+    parser.add_argument('-Receiver', type=str, required=True,  help="The addresses to send results to", nargs='+')
+    parser.add_argument('-Log',      type=str, required=True,  help="The file name to read the results from")
+    
+    args = parser.parse_args()
+
+    server_email    = args.Server
+    server_password = args.Password
+    recipient_list  = args.Receiver
+    log_file_name   = args.Log
+
+    sendNotification(server_email, server_password, recipient_list, log_file_name)

@@ -2,17 +2,8 @@ import speedtest
 import argparse
 import time
 
-def testSpeed():
+def testSpeed(threads, log_file_name):
     print("Initializing...")
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-Log',      required=True,  help="The file name to write the results to")
-    parser.add_argument('-Threads',     required=True,  help="The number of threads to use")
-    
-    args = parser.parse_args()
-
-    log_file_name = args.Log
-    threads       = abs(int(args.Threads))
 
     # list of servers
     server = list()
@@ -43,4 +34,14 @@ def testSpeed():
     print("Test Finished")
 
 if __name__ == "__main__":
-    testSpeed()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-Log',      required=True,  help="The file name to write the results to")
+    parser.add_argument('-Threads',     required=True,  help="The number of threads to use")
+    
+    args = parser.parse_args()
+
+    log_file_name = args.Log
+    threads       = abs(int(args.Threads))
+
+    testSpeed(threads, log_file_name)
