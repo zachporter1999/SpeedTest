@@ -4,7 +4,8 @@ import datetime
 from matplotlib import pyplot as plt
 
 def sendNotification(server_email, server_password, recipient_list, log_file_name):
-    plot_file_name = "SpeedTest_Plot.png" 
+    date = datetime.datetime.now()
+    plot_file_name = "results/summary_[{}-{}-{}].png".format(date.day, date.month, date.year) 
 
 
     #log into email
