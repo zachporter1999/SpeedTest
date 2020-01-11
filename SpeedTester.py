@@ -1,15 +1,15 @@
 import speedtest
 import argparse
-import time
+import datetime
 
-def testSpeed(threads, log_file_name):
-    print("Initializing...")
+def testSpeed(threads):
 
-    # list of servers
+    date = datetime.datetime.now()
+    log_file_name = "results/results_[{}-{}-{}].log".format(date.day, date.month, date.year)
     server = list()
-
-    # create speedtest object
     test = speedtest.Speedtest()
+
+    print("Initializing...")
 
     # run test
     print("Testing Upload...")
@@ -23,7 +23,7 @@ def testSpeed(threads, log_file_name):
     results      = test.results.dict()
     upload       = results['upload']
     download     = results['download']
-    time_stamp   = int(time.time())
+    time_stamp   = "{}/{}/{} {}:{}".format(date.day, date.month, date.year, date.hour, date.minute)
     result_final = "[{}] | Upload: {} Mbits/s, Download: {} Mbits/s\n".format(time_stamp, round(upload*10e-6, 3), round(download*10e-6, 3))
 
     print(result_final)
@@ -36,12 +36,10 @@ def testSpeed(threads, log_file_name):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-Log',      required=True,  help="The file name to write the results to")
     parser.add_argument('-Threads',     required=True,  help="The number of threads to use")
     
     args = parser.parse_args()
 
-    log_file_name = args.Log
     threads       = abs(int(args.Threads))
 
-    testSpeed(threads, log_file_name)
+    testSpeed(threads)

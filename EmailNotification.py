@@ -3,9 +3,10 @@ import argparse
 import datetime
 from matplotlib import pyplot as plt
 
-def sendNotification(server_email, server_password, recipient_list, log_file_name):
+def sendNotification(server_email, server_password, recipient_list):
     date = datetime.datetime.now()
     plot_file_name = "results/summary_[{}-{}-{}].png".format(date.day, date.month, date.year) 
+    log_file_name = "results/results_[{}-{}-{}].log".format(date.day, date.month, date.year)
 
 
     #log into email
@@ -29,11 +30,14 @@ def sendNotification(server_email, server_password, recipient_list, log_file_nam
     for line in results.split('\n'):
         if len(line) > 0:
             words = line.split(' ')
-            test_time = words[0].strip('[]')
-            upload    = words[3]
-            download  = words[6]
+            test_date = words[0].strip('[]').split('/')
+            test_time = words[1].strip('[]').split(':')
+            upload    = words[4]
+            download  = words[7]
 
-            time_points.append((float(test_time) - midnight)//3600)
+            timestamp = datetime.datetime(int(test_date[2]), int(test_date[1]), int(test_date[0]), int(test_time[0]), int(test_time[1])).timestamp()
+
+            time_points.append((float(timestamp) - midnight)//3600)
             upload_points.append(float(upload))
             download_points.append(float(download))
 
@@ -59,13 +63,11 @@ if __name__ == "__main__":
     parser.add_argument('-Server',   type=str,  required=True,  help="The email to send the results from")
     parser.add_argument('-Password', type=str, required=True,  help="The password for the server")
     parser.add_argument('-Receiver', type=str, required=True,  help="The addresses to send results to", nargs='+')
-    parser.add_argument('-Log',      type=str, required=True,  help="The file name to read the results from")
     
     args = parser.parse_args()
 
     server_email    = args.Server
     server_password = args.Password
     recipient_list  = args.Receiver
-    log_file_name   = args.Log
 
-    sendNotification(server_email, server_password, recipient_list, log_file_name)
+    sendNotification(server_email, server_password, recipient_list)
