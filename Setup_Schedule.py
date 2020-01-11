@@ -67,7 +67,8 @@ if __name__ == "__main__":
     test_period = hrs * 3600 + mins * 60
 
 
-    print("Starting")
+    print("Starting...")
+    SpeedTester.testSpeed(test_threads, log_file)
     # schedule tasks
     while(True):
         if datetime.datetime.now().timestamp() >= email_start_time and past_start:    
@@ -78,3 +79,4 @@ if __name__ == "__main__":
             schedule.enter(email_period, email_priority, action=send_email, argument=(email_addr, email_pwrd, log_file)) 
         schedule.enter(test_period, test_priority, action=SpeedTester.testSpeed, argument=(test_threads, log_file)) 
         schedule.run()
+        
