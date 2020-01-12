@@ -19,30 +19,76 @@ def setup_linux(parser):
 def setup_windows(parser):
 
     #parse args
-    parser.add_argument('-XML', nargs=2, type=str,  required=True,  help="The XML 2 config file used to setup the task.  -XML <speed test config> <email notification config>")
+    parser.add_argument('-Enable',  action='store_true', required=False,  help="used to enable the task")
+    parser.add_argument('-Disable', action='store_true', required=False,  help="used to disable the task")
+    parser.add_argument('-Delete',  action='store_true', required=False,  help="used to delete the task")
+    parser.add_argument('-XML',     nargs=2,             required=False,  help="The XML 2 config file used to setup the task.  -XML <speed test config> <email notification config>")
     
     args = parser.parse_args()
 
-    testConfig, emailConfig = args.XML
+    enable = args.Enable
+    disable = args.Disable
+    delete = args.Delete
+    xmls = args.XML
 
     testSpeedTask = 'test_Internet_Speed_Periodic'
     emailTestTask = 'email_Speed_Test_Results_Periodic'
 
-    createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, testConfig)
     deleteTestSched = 'schtasks /delete /tn {}'.format(testSpeedTask)
-
-    createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, emailConfig)
     deleteEmailSched = 'schtasks /delete /tn {}'.format(emailTestTask)
 
-    print("Scheduling with configs {} and {}".format(testConfig, emailConfig))
+    disableTestSched = 'schtasks /change /tn {} /DISABLE'.format(testSpeedTask)
+    disableEmailSched = 'schtasks /change /tn {} /DISABLE'.format(emailTestTask)
 
-    os.system(deleteTestSched)
-    os.system(createTestSched)
+    enableTestSched = 'schtasks /change /tn {} /ENABLE'.format(testSpeedTask)
+    enableEmailSched = 'schtasks /change /tn {} /ENABLE'.format(emailTestTask)
 
-    os.system(deleteEmailSched)
-    os.system(createEmailSched)
+    if xmls != None:
+        testConfig, emailConfig = xmls
+        createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, testConfig)
+        createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, emailConfig)
 
-    return
+    if  xmls != None:
+
+        print("Scheduling with configs {} and {}...".format(testConfig, emailConfig))
+
+        os.system(deleteTestSched)
+        os.system(createTestSched)
+
+        os.system(deleteEmailSched)
+        os.system(createEmailSched)
+
+    elif delete:
+
+        print("delteing tasks...")
+
+        os.system(deleteTestSched)
+        os.system(deleteEmailSched)
+
+    elif disable:
+
+        print("disabling tasks...")
+
+        os.system(disableTestSched)
+        os.system(disableEmailSched)
+
+    elif enable:
+
+        print('enabling tasks...')
+        
+        os.system(enableTestSched)
+        os.system(enableEmailSched)
+
+    else:
+        print("usage: setup.py [-h] [-Enable] [-Disable] [-Delete] [-XML XML XML]")
+        print()
+        print("optional arguments:")
+        print("-h, --help    show this help message and exit")
+        print("-Enable       used to enable the task")
+        print("-Disable      used to disable the task")
+        print("-Delete       used to delete the task")
+        print("-XML XML XML  The XML 2 config file used to setup the task. -XML <speed test config> <email notification config>")
+
 
 def setup_cygwin(parser):
     return 
