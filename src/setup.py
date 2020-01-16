@@ -50,8 +50,8 @@ def setup_windows(parser):
     working_directory = "WorkingDirectory"
     periodic_interval = 'Interval'
 
-    test_speed_template_xml = r"Configs\testSpeedTemplate.xml"
-    send_email_template_xml = r"Configs\sendEmailTemplate.xml"
+    test_speed_template_xml = r"..\Configs\testSpeedTemplate.xml"
+    send_email_template_xml = r"..\Configs\sendEmailTemplate.xml"
 
     createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, test_speed_template_xml)
     createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, send_email_template_xml)
