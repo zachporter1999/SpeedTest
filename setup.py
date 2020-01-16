@@ -25,14 +25,14 @@ def setup_windows(parser):
     parser.add_argument('-Enable',  action='store_true', required=False,  help="used to enable the task")
     parser.add_argument('-Disable', action='store_true', required=False,  help="used to disable the task")
     parser.add_argument('-Delete',  action='store_true', required=False,  help="used to delete the task")
-    parser.add_argument('-XML',     nargs=2,             required=False,  help="The XML 2 config file used to setup the task.  -XML <speed test config> <email notification config>")
+    parser.add_argument('-Create',  action='store_true', required=False,  help="used to create the task")
     
     args = parser.parse_args()
 
     enable = args.Enable
     disable = args.Disable
     delete = args.Delete
-    xmls = args.XML
+    create = args.Create
 
 
     testSpeedTask = 'test_Internet_Speed_Periodic'
@@ -47,25 +47,42 @@ def setup_windows(parser):
     enableTestSched = 'schtasks /change /tn {} /ENABLE'.format(testSpeedTask)
     enableEmailSched = 'schtasks /change /tn {} /ENABLE'.format(emailTestTask)
 
-    if xmls != None:
-        testConfig, emailConfig = xmls
-        createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, testConfig)
-        createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, emailConfig)
+    working_directory = "WorkingDirectory"
+    periodic_interval = 'Interval'
+
+    test_speed_template_xml = r"Configs\testSpeedTemplate.xml"
+    send_email_template_xml = r"Configs\sendEmailTemplate.xml"
+
+    createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, test_speed_template_xml)
+    createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, send_email_template_xml)
+
+
+    if  create:
 
         # edit xml
         ET.register_namespace('', "http://schemas.microsoft.com/windows/2004/02/mit/task")
-        tree = ET.parse(xmls[0])
+        tree = ET.parse(test_speed_template_xml)
         root = tree.getroot()
         for child in root.iter():
-            if 'WorkingDirectory' in child.tag:
-                print(child.text, "--->")
+
+            # sets the working directory
+            if working_directory in child.tag:
                 child.text = str(SCRIPT_DIR)
-                print("--->", child.text)
-        tree.write(xmls[0])
+                print("Setting up working directory")
 
-    if  xmls != None:
+            if periodic_interval in child.tag:
+                print("Enter how often you would like the tests to be run.")
+                print("(eg. for a test to run ever 30 min enter 30M, for every hour enter 1H)")
+                time = input("time: ").upper()
 
-        print("Scheduling with configs {} and {}...".format(testConfig, emailConfig))
+                ### error trapping of input ###
+
+                child.text = "PT{}".format(time)
+
+        # write to the template
+        tree.write(test_speed_template_xml)
+
+        print("Scheduling with configs {} and {}...".format(test_speed_template_xml, send_email_template_xml))
 
         os.system(deleteTestSched)
         os.system(createTestSched)
