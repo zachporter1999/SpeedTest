@@ -34,16 +34,6 @@ def setup_windows(parser):
     delete = args.Delete
     xmls = args.XML
 
-    # edit xml
-    ET.register_namespace('', "http://schemas.microsoft.com/windows/2004/02/mit/task")
-    tree = ET.parse(xmls[0])
-    root = tree.getroot()
-    for child in root.iter():
-        if 'WorkingDirectory' in child.tag:
-            print(child.text, "--->")
-            child.text = str(SCRIPT_DIR)
-            print("--->", child.text)
-    tree.write(xmls[0])
 
     testSpeedTask = 'test_Internet_Speed_Periodic'
     emailTestTask = 'email_Speed_Test_Results_Periodic'
@@ -61,6 +51,17 @@ def setup_windows(parser):
         testConfig, emailConfig = xmls
         createTestSched = 'schtasks /create /tn {} /xml {}'.format(testSpeedTask, testConfig)
         createEmailSched = 'schtasks /create /tn {} /xml {}'.format(emailTestTask, emailConfig)
+
+        # edit xml
+        ET.register_namespace('', "http://schemas.microsoft.com/windows/2004/02/mit/task")
+        tree = ET.parse(xmls[0])
+        root = tree.getroot()
+        for child in root.iter():
+            if 'WorkingDirectory' in child.tag:
+                print(child.text, "--->")
+                child.text = str(SCRIPT_DIR)
+                print("--->", child.text)
+        tree.write(xmls[0])
 
     if  xmls != None:
 
