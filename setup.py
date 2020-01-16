@@ -1,6 +1,7 @@
 import sys
 import argparse
 import os
+import xml.etree.ElementTree as ET
 
 PLATFORM = sys.platform
 
@@ -9,6 +10,8 @@ LINUX = 'linux'
 WINDOWS = 'win32'
 CYGWIN = 'cygwin'
 MACOS = 'darwin'
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__)) # directory of this script
 
 def setup_aix(parser):
     return
@@ -30,6 +33,17 @@ def setup_windows(parser):
     disable = args.Disable
     delete = args.Delete
     xmls = args.XML
+
+    # edit xml
+    ET.register_namespace('', "http://schemas.microsoft.com/windows/2004/02/mit/task")
+    tree = ET.parse(xmls[0])
+    root = tree.getroot()
+    for child in root.iter():
+        if 'WorkingDirectory' in child.tag:
+            print(child.text, "--->")
+            child.text = str(SCRIPT_DIR)
+            print("--->", child.text)
+    tree.write(xmls[0])
 
     testSpeedTask = 'test_Internet_Speed_Periodic'
     emailTestTask = 'email_Speed_Test_Results_Periodic'
