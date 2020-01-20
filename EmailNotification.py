@@ -1,6 +1,8 @@
 import gmail
 import argparse
 import datetime
+import numpy
+from scipy.interpolate import splrep, splev
 from matplotlib import pyplot as plt
 
 def sendNotification():
@@ -31,7 +33,7 @@ def sendNotification():
     results = str()
 
     # midnight time in unix time
-    midnight = datetime.datetime(time.year, time.month, time.day).timestamp()
+    midnight = datetime.datetime(time.year, time.month, 9).timestamp()
 
     #read results
     print("Reading Results...")
@@ -45,12 +47,20 @@ def sendNotification():
             upload    = words[3]
             download  = words[6]
 
-            time_points.append((float(test_time) - midnight)//3600)
+            time_points.append((float(test_time) - midnight)/3600)
             upload_points.append(float(upload))
             download_points.append(float(download))
 
-    plt.plot(time_points, upload_points, color='blue', label="Upload")
-    plt.plot(time_points, download_points, color='orange', label="Download")
+    time_new = numpy.linspace(time_points[0], time_points[len(time_points)-1], 100)
+
+    upload_spline   = splrep(time_points, upload_points)
+    download_spline = splrep(time_points, download_points)
+
+    upload_points   = splev(time_new, upload_spline,   der=0)
+    download_points = splev(time_new, download_spline, der=0)
+
+    plt.plot(time_new, upload_points, color='blue', label="Upload")
+    plt.plot(time_new, download_points, color='orange', label="Download")
     plt.ylabel("Speed(Mbits/s)")
     plt.xlabel("Time(Hours)")
     plt.title("Upload and Download Speed Summary")
