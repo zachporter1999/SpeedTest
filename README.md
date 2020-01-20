@@ -7,7 +7,7 @@
 Branch             |   Description
 -------------------|---------------------------------------------------------------------------------------
 Jenkins_Based_v1.0 | - Uses jenkins automation server to schedule tasks. 
--------------------|---------------------------------------------------------------------------------------
+
 Develop/v1.0       | - latest release under development. with use a python script to schedule task,                                                                           |   the email plot will be interpolated, and with give max, avg, and min speed readings
 
 
