@@ -33,7 +33,7 @@ def sendNotification():
     results = str()
 
     # midnight time in unix time
-    midnight = datetime.datetime(time.year, time.month, 9).timestamp()
+    midnight = datetime.datetime(time.year, time.month, time.day).timestamp()
 
     #read results
     print("Reading Results...")
