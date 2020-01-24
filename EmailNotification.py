@@ -52,6 +52,7 @@ def sendNotification():
             upload_points.append(float(upload))
             download_points.append(float(download))
 
+    # interpolate results with spline
     time_new = numpy.linspace(time_points[0], time_points[len(time_points)-1], 100)
 
     upload_spline   = splrep(time_points, upload_points)
@@ -60,6 +61,7 @@ def sendNotification():
     upload_points   = splev(time_new, upload_spline,   der=0)
     download_points = splev(time_new, download_spline, der=0)
 
+    # generate plot
     plt.plot(time_new, upload_points, color='blue', label="Upload")
     plt.plot(time_new, download_points, color='orange', label="Download")
     plt.ylabel("Speed(Mbits/s)")
@@ -75,6 +77,9 @@ def sendNotification():
                             to=recipient,\
                             attachments=[plot_file_name, log_file_name])
         mail_server.send(msg)
+
+    # move results to package
+    os.replace(log_location, os.path.join('pkg', log_location))
 
 if __name__ == "__main__":
     sendNotification()
